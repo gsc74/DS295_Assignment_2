@@ -21,8 +21,8 @@ void readGraph(std::vector<std::vector<std::pair<int, int>>> &adjList, int &n, i
     int e;
     file >> n >> m >> e;
     std::cerr << " Vertices : " << n << " Edges : " << e << std::endl;
-    adjList.resize(n);
-    for (int i = 0; i < n; i++) {
+    adjList.resize(e);
+    for (int i = 0; i < e; i++) {
         int u, v, w;
         file >> u >> v >> w;
         u = u - 1;
@@ -67,16 +67,21 @@ void dijkstra(std::vector<std::vector<std::pair<int, int>>> &adjList, int n, int
     std::ofstream file(filename, std::ios::binary);
     std::vector<std::vector<int>> list_vtx(n);
     for (int i = 0; i < n; i++) {
-        list_vtx[i].push_back(dist[i]);
+        // list_vtx[i].push_back(dist[i]);
+        file.write((char *)(&dist[i]), 1 * sizeof(int));
         // std::cerr << " cost : " << dist[i] << " path size : ";
-        list_vtx[i].push_back(shortestPath[i].size());
+        // list_vtx[i].push_back(shortestPath[i].size());
+        int sz = (int)shortestPath[i].size();
+        file.write((char *)(&sz), 1 * sizeof(int));
         // std::cerr << shortestPath[i].size() << " path : ";
         for (int j = 0; j < shortestPath[i].size(); j++) {
-            list_vtx[i].push_back(shortestPath[i][j] + 1);
+            // list_vtx[i].push_back(shortestPath[i][j] + 1);
+            int out = shortestPath[i][j] + 1;
+            file.write((char *)(&out), 1 * sizeof(int));
             // std::cerr << shortestPath[i][j] + 1 << " "<< std::endl;
         }
     }
-    file.write((char *)list_vtx.data(), list_vtx.size() * sizeof(list_vtx[0]));
+    // file.write((char *)list_vtx.data(), list_vtx.size() * sizeof(list_vtx[0]));
     file.close();
 }
 
